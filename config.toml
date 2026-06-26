@@ -1,0 +1,62 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "dextryz"
+email = "rvs.hello@pm.me"
+
+[ui]
+# Bare `jj` shows the log instead of help
+default-command = ["log", "-n", "20"]
+diff-editor = ":builtin"
+editor = "nvim"
+diff-formatter = ":git"
+
+[template-aliases]
+'format_short_id(id)' = 'id.shortest()'
+
+[aliases]
+# The famous "tug": move the nearest ancestor bookmark up to @-,
+# so you can `jj tug && jj git push` without manually re-pointing it
+tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
+l = ["log", "-r", "::"]
+init = ["git", "init"]
+push = ["git", "push"]
+fetch = ["git", "fetch"]
+
+[revset-aliases]
+'closest_bookmark(to)' = 'heads(::to & bookmarks())'
+
+# e-ink coloring
+
+#[colors]
+## Short unique-prefix of the IDs pops; the rest stays dim
+#"change_id"          = "#7a8478"                          # grey0
+#"change_id prefix"   = { fg = "#d699b6", bold = true }    # purple
+#"commit_id"          = "#7a8478"
+#"commit_id prefix"   = { fg = "#7fbbb3", bold = true }    # blue
+#
+## The columns you scan in `jj log`
+#"bookmarks"          = { fg = "#a7c080", bold = true }    # green
+#"tags"               = "#dbbc7f"                          # yellow
+#"git_head"           = "#83c092"                          # aqua
+#"git_refs"           = "#83c092"
+#"author"             = "#7fbbb3"                          # blue
+#"email"              = "#7fbbb3"
+#"timestamp"          = "#859289"                          # grey1
+#
+## State markers — the loud ones
+#"conflict"           = { fg = "#e67e80", bold = true }    # red
+#"divergent"          = { fg = "#e67e80", bold = true }
+#"empty"              = "#a7c080"                          # green
+#"working_copy"       = { bold = true }                    # the @ line
+#"description placeholder" = "#e69875"                     # orange
+#"error"              = { fg = "#e67e80", bold = true }
+#"warning"            = "#dbbc7f"                          # yellow
+#"hint"               = "#83c092"                          # aqua
+#
+#"diff added"     = "#dbbc7f"   # A  yellow
+#"diff modified"  = { bold = true }   # M  green
+#"diff removed"   = "#E67E80"   # D  red
+#"diff renamed"   = "#A7C080"   # R  blue
+#"diff copied"    = "#83C092"   # C  aqua
+#"diff untracked" = "#909090"   # ?  muted grey (rarely shown in jj)
