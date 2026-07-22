@@ -6,13 +6,14 @@ email = "rvs.hello@pm.me"
 
 [ui]
 # Bare `jj` shows the log instead of help
-default-command = ["log", "-n", "20"]
+default-command = ["log", "-n", "50"]
 diff-editor = ":builtin"
 editor = "nvim"
 diff-formatter = ":git"
 
 [template-aliases]
 'format_short_id(id)' = 'id.shortest()'
+'format_short_commit_id(id)' = 'id.shortest(4)'
 
 [aliases]
 # The famous "tug": move the nearest ancestor bookmark up to @-,
