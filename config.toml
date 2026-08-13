@@ -4,20 +4,26 @@
 name = "dextryz"
 email = "rvs.hello@pm.me"
 
+[signing]
+behavior = "force"
+backend = "ssh"
+key = "~/.ssh/id_rsa_dextryz.pub"
+
+[signing.backends.ssh]
+allowed-signers = "~/.ssh/allowed_signers"
+
 [ui]
-# Bare `jj` shows the log instead of help
 default-command = ["log", "-n", "50"]
 diff-editor = ":builtin"
 editor = "nvim"
 diff-formatter = ":git"
+show-cryptographic-signatures = true
 
 [template-aliases]
 'format_short_id(id)' = 'id.shortest()'
 'format_short_commit_id(id)' = 'id.shortest(4)'
 
 [aliases]
-# The famous "tug": move the nearest ancestor bookmark up to @-,
-# so you can `jj tug && jj git push` without manually re-pointing it
 tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
 l = ["log", "-r", "::"]
 init = ["git", "init"]
