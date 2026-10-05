@@ -5,14 +5,13 @@ name = "dextryz"
 email = "rvs.hello@pm.me"
 
 [signing]
-behavior = "force"
+# Sign my own commits with the SSH key GitHub already has
+behavior = "own"
 backend = "ssh"
-key = "~/.ssh/id_rsa_dextryz.pub"
-
-[signing.backends.ssh]
-allowed-signers = "~/.ssh/allowed_signers"
+key = "~/.ssh/id_ed25519.pub"
 
 [ui]
+# Bare `jj` shows the log instead of help
 default-command = ["log", "-n", "15"]
 diff-editor = ":builtin"
 editor = "nvim"
@@ -30,6 +29,14 @@ l = ["log", "-r", "::"]
 init = ["git", "init"]
 push = ["git", "push"]
 fetch = ["git", "fetch"]
+# Status with only the A/M/D letter coloured, in bold. jj labels each "M path"
+# line as one span, so this ends the styling right after the letter.
+st = ["util", "exec", "--", "bash", "-c", '''
+set -o pipefail
+[ -t 1 ] && color=always || color=never
+jj status --color="$color" "$@" |
+  sed -E 's/^((\x1b\[[0-9;]*m)+[A-Z?])( .*)\x1b\[[0-9;]*m$/\x1b[1m\1\x1b[0m\3/'
+''', "jj-st"]
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
@@ -68,3 +75,51 @@ fetch = ["git", "fetch"]
 #"diff renamed"   = "#A7C080"   # R  blue
 #"diff copied"    = "#83C092"   # C  aqua
 #"diff untracked" = "#909090"   # ?  muted grey (rarely shown in jj)
+
+# Kanagawa (Wave) coloring for references
+#[colors]
+#"bookmarks"   = { fg = "#98bb6c", bold = true }   # springGreen
+#"tags"        = "#e6c384"                          # carpYellow
+#"git_head"    = "#7aa89f"                          # waveAqua2
+#"git_refs"    = "#7aa89f"
+
+# solarized-mono coloring, matching ~/.config/nvim/colors/solarized-mono.lua:
+# Solarized base tones plus solarized-osaka accents.
+[colors]
+# Short unique-prefix of the IDs pops; the rest stays dim
+"change_id"          = "#586e75"                          # base01
+"change_id prefix"   = { fg = "#9ca0ed", bold = true }    # violet300 (markdown links)
+"change_id rest"     = "#586e75"
+"commit_id"          = "#586e75"
+"commit_id prefix"   = { fg = "#2beede", bold = true }    # cyan300
+"commit_id rest"     = "#586e75"
+
+# The columns you scan in `jj log`
+"bookmarks"          = { fg = "#d6ffad", bold = false, italic = true }  # green100
+"working_copy bookmarks" = "#d6ffad"                      # jj defaults this to bright magenta
+"tags"               = "#ffe999"                          # yellow100
+"git_head"           = "#2aa298"                          # cyan500
+"git_refs"           = "#2aa298"
+"author"             = "#839496"                          # base0
+"email"              = "#839496"
+"timestamp"          = "#586e75"                          # base01
+
+# State markers
+"conflict"           = { fg = "#ff9b99", bold = true }    # red100 (errors)
+"divergent"          = { fg = "#ff9b99", bold = true }
+"empty"              = "#859900"                          # green500
+"working_copy"       = { bold = true }                    # the @ line
+"working_copy timestamp" = "#586e75"
+"description placeholder" = { fg = "#586e75", italic = true }
+"working_copy description placeholder" = { fg = "#586e75", italic = true }
+"error"              = { fg = "#ff9b99", bold = true }    # red100
+"warning"            = "#ffe999"                          # yellow100
+"hint"               = "#2aa298"                          # cyan500
+
+# Diffs: same 100 shades as the nvim git signs
+"diff added"         = "#d6ffad"                          # green100
+"diff modified"      = "#ffe999"                          # yellow100
+"diff removed"       = "#ff9b99"                          # red100
+"diff renamed"       = "#2aa298"                          # cyan500
+"diff copied"        = "#2aa298"
+"diff untracked"     = "#586e75"                          # base01
